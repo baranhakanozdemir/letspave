@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Radzen.Blazor" Version="4.24.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LetsPave.Core.Models\LetsPave.Core.Models.csproj" />
+    <ProjectReference Include="..\LetsPave.Core.ServiceInterfaces\LetsPave.Core.ServiceInterfaces.csproj" />
+  </ItemGroup>
+
+</Project>

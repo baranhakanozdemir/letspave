@@ -1,0 +1,157 @@
+﻿@page "/report"
+@rendermode InteractiveServer
+@using LetsPave.Web.Models
+
+@inject ISaleService _service
+<h4>Report</h4>
+<hr />
+@if (_loading)
+{
+    <p>loading..</p>
+}
+else
+{
+    if (_lookup != null)
+    {
+        <table style="font-size:small;width:1200px">
+            <tr>
+                <th>Season</th>
+                <th>Category</th>
+                <th>Region</th>
+                <th>State</th>
+                <th>City</th>
+                <th>Sales</th>
+                <th>Discount</th>
+                <th>Profit</th>
+            </tr>
+            <tr>
+                <td>
+                    <select @bind-value="@_request.Season" @bind-value:event="oninput" @onchange="@RequestChanged">
+                        <option value="">All</option>
+                        <option value="Spring">Spring</option>
+                        <option value="Summer">Summer</option>
+                        <option value="Fall">Fall</option>
+                        <option value="Winter">Winter</option>
+                    </select>
+                </td>
+                <td>
+                    <select @bind-value="@_request.Category" @bind-value:event="oninput" @onchange="@RequestChanged">
+                        <option value="">All</option>
+                        @foreach (var item in _lookup.Categories)
+                        {
+                            <option value="@item">@item</option>
+                        }
+                    </select>
+                </td>
+                <td>
+                    <select @bind-value="@_request.Region" @bind-value:event="oninput" @onchange="@RequestChanged">
+                        <option value="">All</option>
+                        @foreach (var item in _lookup.Regions)
+                        {
+                            <option value="@item">@item</option>
+                        }
+                    </select>
+                </td>
+                <td>
+                    <select @bind-value="@_request.State" @bind-value:event="oninput" @onchange="@RequestChanged">
+                        <option value="">All</option>
+                        @foreach (var item in _lookup.States)
+                        {
+                            <option value="@item">@item</option>
+                        }
+                    </select>
+                </td>
+                <td>
+                    <select @bind-value="@_request.City" @bind-value:event="oninput" @onchange="@RequestChanged">
+                        <option value="">All</option>
+                        @foreach (var item in _lookup.Cities)
+                        {
+                            <option value="@item">@item</option>
+                        }
+                    </select>
+                </td>
+                <td>Total</td>
+                <td>Total</td>
+                <td>Total</td>
+            </tr>
+            @if (_data != null)
+            {
+                <tr>
+                    <td colspan="8" style="text-align:center">
+                        <select @bind-value="@_selectedSeries" @bind-value:event="oninput" @onchange="@SeriesChanged">
+                            <option value="1">Total Sales by Season</option>
+                            <option value="2">Total Sales by Category</option>
+                            <option value="3">Total Sales by Region</option>
+                            <option value="4">Total Sales by State</option>
+                            <option value="5">Total Sales by City</option>
+                        </select>
+                        <div>
+                            <DataComponent Data="_series" />
+                        </div>
+
+                    </td>
+                </tr>
+                foreach (var item in _data)
+                {
+                    <tr>
+                        <td>@item.Season</td>
+                        <td>@item.Category</td>
+                        <td>@item.Region</td>
+                        <td>@item.State</td>
+                        <td>@item.City</td>
+                        <td style="text-align:right;font-family:'Courier New'">@item.Price.ToString("C2")</td>
+                        <td style="text-align:right;font-family:'Courier New'">@item.Discount.ToString("C2")</td>
+                        <td style="text-align:right;font-family:'Courier New'">@item.Profit.ToString("C2")</td>
+                    </tr>
+                }
+            }
+        </table>
+    }
+}
+
+
+
+@code 
+{
+    private SaleLookupItem _lookup;
+    private ProductCategorySaleItem _request = new ProductCategorySaleItem { };
+    private ICollection<ProductCategorySaleItem> _data;
+    private List<DataItem> _series = new List<DataItem>();
+    private string _selectedSeries = "1";
+
+    bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _lookup = await _service.GetSaleLookupItem();
+        await GetReportData();
+        _loading = false;
+    }
+
+    protected async Task GetReportData()
+    {
+        _data = await _service.GetCategoryRegionSeasonReport(_request);
+        await SeriesChanged(null);
+        StateHasChanged();
+    }
+
+    protected async Task RequestChanged(ChangeEventArgs e)
+    {
+        await GetReportData();
+    }
+
+    protected async Task SeriesChanged(ChangeEventArgs e)
+    {
+        switch (_selectedSeries)
+        {
+            case "1": _series = _data.GroupBy(d => d.Season).Select(s => new DataItem { Key = s.Key, Value = s.Sum(r => r.Price) }).ToList(); return;
+            case "2": _series = _data.GroupBy(d => d.Category).Select(s => new DataItem { Key = s.Key, Value = s.Sum(r => r.Price) }).ToList(); return;
+            case "3": _series = _data.GroupBy(d => d.Region).Select(s => new DataItem { Key = s.Key, Value = s.Sum(r => r.Price) }).ToList(); return;
+            case "4": _series = _data.GroupBy(d => d.State).Select(s => new DataItem { Key = s.Key, Value = s.Sum(r => r.Price) }).ToList(); return;
+            case "5": _series = _data.GroupBy(d => d.City).Select(s => new DataItem { Key = s.Key, Value = s.Sum(r => r.Price) }).ToList(); return;
+        }
+    }
+
+
+}

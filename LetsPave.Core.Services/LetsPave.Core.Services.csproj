@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LetsPave.Core.Models\LetsPave.Core.Models.csproj" />
+    <ProjectReference Include="..\LetsPave.Core.ServiceInterfaces\LetsPave.Core.ServiceInterfaces.csproj" />
+    <ProjectReference Include="..\LetsPave.Data\LetsPave.Data.csproj" />
+  </ItemGroup>
+
+</Project>

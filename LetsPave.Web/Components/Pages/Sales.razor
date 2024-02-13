@@ -1,0 +1,41 @@
+﻿@page "/sales"
+@rendermode InteractiveServer
+@inject ISaleService _service
+<h4>Sales</h4>
+@if (_loading)
+{
+    <p>Loading..</p>
+}
+else
+{
+    if (_data != null)
+    {
+        <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Simple" AllowSorting="true" PageSize="20" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="false"
+                        Data="@_data" TItem="ISale" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+            <Columns>
+                <RadzenDataGridColumn TItem="ISale" Property="Order.OrderId" Filterable="false" Title="Order Id" Frozen="true" Width="100px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="ISale" Property="Order.OrderDate" Filterable="false" Title="Order Date" Frozen="true" Width="140px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="ISale" Property="Order.ShipMode" Filterable="false" Title="Ship Mode" Frozen="true" Width="100px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="ISale" Property="Customer.CustomerName" Filterable="false" Title="Customer Name" Frozen="true" Width="120px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="ISale" Property="Customer.Country" Filterable="false" Title="Country" Frozen="true" Width="120px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="ISale" Property="Customer.Region" Filterable="false" Title="Region" Frozen="true" Width="120px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="ISale" Property="Customer.State" Filterable="false" Title="State" Frozen="true" Width="120px" TextAlign="TextAlign.Center" />
+                <RadzenDataGridColumn TItem="ISale" Property="Customer.City" Filterable="false" Title="City" Frozen="true" Width="120px" TextAlign="TextAlign.Center" />
+            </Columns>
+        </RadzenDataGrid>
+    }
+}
+
+
+
+@code {
+    IEnumerable<ISale> _data=null;
+    bool _loading = true;
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var data = await _service.GetAll();
+        _data = data.ToList();
+        _loading = false;
+    }
+}

@@ -1,0 +1,11 @@
+﻿@using LetsPave.Web.Models
+
+<RadzenChart>
+    <RadzenColumnSeries Data="@Data" CategoryProperty="Key" ValueProperty="Value" />
+    <RadzenLegend Visible="false" />
+</RadzenChart>
+
+@code 
+{
+    [Parameter] public List<DataItem> Data { get; set; }
+}
