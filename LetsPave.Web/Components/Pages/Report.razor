@@ -145,11 +145,11 @@ else
     {
         switch (_selectedSeries)
         {
-            case "1": _series = _data.GroupBy(d => d.Season).Select(s => new DataItem { Key = s.Key, Value = s.Sum(r => r.Price) }).ToList(); return;
-            case "2": _series = _data.GroupBy(d => d.Category).Select(s => new DataItem { Key = s.Key, Value = s.Sum(r => r.Price) }).ToList(); return;
-            case "3": _series = _data.GroupBy(d => d.Region).Select(s => new DataItem { Key = s.Key, Value = s.Sum(r => r.Price) }).ToList(); return;
-            case "4": _series = _data.GroupBy(d => d.State).Select(s => new DataItem { Key = s.Key, Value = s.Sum(r => r.Price) }).ToList(); return;
-            case "5": _series = _data.GroupBy(d => d.City).Select(s => new DataItem { Key = s.Key, Value = s.Sum(r => r.Price) }).ToList(); return;
+            case "1": _series = _data.GroupBy(d => d.Season).Select(s => new DataItem { Key = s.Key, Value = s.Sum(r => r.Price) }).OrderByDescending(o=>o.Value).Take(5).ToList(); return;
+            case "2": _series = _data.GroupBy(d => d.Category).Select(s => new DataItem { Key = s.Key, Value = s.Sum(r => r.Price) }).OrderByDescending(o => o.Value).Take(5).ToList(); return;
+            case "3": _series = _data.GroupBy(d => d.Region).Select(s => new DataItem { Key = s.Key, Value = s.Sum(r => r.Price) }).OrderByDescending(o=>o.Value).Take(5).ToList(); return;
+            case "4": _series = _data.GroupBy(d => d.State).Select(s => new DataItem { Key = s.Key, Value = s.Sum(r => r.Price) }).OrderByDescending(o => o.Value).Take(5).ToList(); return;
+            case "5": _series = _data.GroupBy(d => d.City).Select(s => new DataItem { Key = s.Key, Value = s.Sum(r => r.Price) }).OrderByDescending(o => o.Value).Take(5).ToList(); return;
         }
     }
 
